@@ -4,6 +4,7 @@ SoftwareSerial mySerial(4, 2); // RX, TX
 String command = ""; // Stores response of the HC-06 Bluetooth device
 
 int led_pin = 7;
+int led_pin2 = 8;
 
 String readCharacters = "";
 
@@ -15,8 +16,10 @@ void setup() {
   // The HC-06 defaults to 9600 according to the datasheet.
   mySerial.begin(9600);
 
-  pinMode(led_pin,OUTPUT);
+  pinMode(led_pin, OUTPUT);
+  pinMode(led_pin2, OUTPUT);
   digitalWrite(led_pin, HIGH);
+  digitalWrite(led_pin2, HIGH);
 }
 
 void loop() {
@@ -37,6 +40,12 @@ void loop() {
     }
     if (readCharacters == "TF"){
       digitalWrite(led_pin, LOW);
+    }
+    if (readCharacters == "TO2"){
+      digitalWrite(led_pin2, HIGH);
+    }
+    if (readCharacters == "TF2"){
+      digitalWrite(led_pin2, LOW);
     }
     readCharacters = "";
   }
