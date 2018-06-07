@@ -22,6 +22,8 @@ public class ActivityControl extends AppCompatActivity{
     private Button turnOnButton;
     private Button turnOffButton;
     private Button disconnectButton;
+    private Button turnOnButton2;
+    private Button turnOffButton2;
     private ProgressDialog progress;
 
     private BluetoothAdapter bluetoothAdapter = null;
@@ -40,6 +42,8 @@ public class ActivityControl extends AppCompatActivity{
 
         turnOnButton = findViewById(R.id.turnOnButton);
         turnOffButton = findViewById(R.id.turnOffButton);
+        turnOnButton2 = findViewById(R.id.turnOnButton2);
+        turnOffButton2 = findViewById(R.id.turnOffButton2);
         disconnectButton = findViewById(R.id.disconnectButton);
 
         // Execution of AsyncTask to connect Bluetooth
@@ -63,6 +67,20 @@ public class ActivityControl extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 turnOffComment();
+            }
+        });
+
+        turnOnButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                turnOn2Comment();
+            }
+        });
+
+        turnOffButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                turnOff2Comment();
             }
         });
 
@@ -92,10 +110,32 @@ public class ActivityControl extends AppCompatActivity{
         }
     }
 
+    private void turnOn2Comment(){
+        if (bluetoothSocket != null){
+            try {
+                bluetoothSocket.getOutputStream().write("TO2".toString().getBytes());
+                Toast.makeText(this, "Comment sent", Toast.LENGTH_SHORT).show();
+            } catch (IOException e){
+                Toast.makeText(this, "Sending error", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     private void turnOffComment(){
         if (bluetoothSocket != null){
             try {
                 bluetoothSocket.getOutputStream().write("TF".toString().getBytes());
+                Toast.makeText(this, "Comment sent", Toast.LENGTH_SHORT).show();
+            } catch (IOException e){
+                Toast.makeText(this, "Sending error", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void turnOff2Comment(){
+        if (bluetoothSocket != null){
+            try {
+                bluetoothSocket.getOutputStream().write("TF2".toString().getBytes());
                 Toast.makeText(this, "Comment sent", Toast.LENGTH_SHORT).show();
             } catch (IOException e){
                 Toast.makeText(this, "Sending error", Toast.LENGTH_SHORT).show();

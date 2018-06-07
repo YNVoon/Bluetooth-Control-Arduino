@@ -8,7 +8,7 @@
         android:id="@+id/turnOnButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TURN ON"
+        android:text="TURN ON 1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
@@ -16,9 +16,25 @@
         android:id="@+id/turnOffButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TURN OFF"
+        android:text="TURN OFF 1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/turnOnButton"/>
+
+    <Button
+        android:id="@+id/turnOnButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TURN ON 2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/turnOffButton"/>
+
+    <Button
+        android:id="@+id/turnOffButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TURN OFF 2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/turnOnButton2"/>
 
     <Button
         android:id="@+id/disconnectButton"
@@ -26,6 +42,6 @@
         android:layout_height="wrap_content"
         android:text="DISCONNECT"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/turnOffButton"/>
+        app:layout_constraintTop_toBottomOf="@id/turnOffButton2"/>
 
 </android.support.constraint.ConstraintLayout>
