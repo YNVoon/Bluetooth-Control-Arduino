@@ -11,6 +11,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -25,6 +27,8 @@ public class ActivityControl extends AppCompatActivity{
     private Button turnOnButton2;
     private Button turnOffButton2;
     private ProgressDialog progress;
+    private Switch pirSwitch;
+    private TextView instructionText;
 
     private BluetoothAdapter bluetoothAdapter = null;
     private BluetoothSocket bluetoothSocket = null;
@@ -45,6 +49,10 @@ public class ActivityControl extends AppCompatActivity{
         turnOnButton2 = findViewById(R.id.turnOnButton2);
         turnOffButton2 = findViewById(R.id.turnOffButton2);
         disconnectButton = findViewById(R.id.disconnectButton);
+        pirSwitch = findViewById(R.id.pirSwitch);
+        instructionText = findViewById(R.id.instructionText);
+
+        hideButtonsVisibility(); // Initial was controlled by the PIR.
 
         // Execution of AsyncTask to connect Bluetooth
         new ConnectBluetooth().execute();
@@ -84,6 +92,59 @@ public class ActivityControl extends AppCompatActivity{
             }
         });
 
+        pirSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (pirSwitch.isChecked()){
+                    Toast.makeText(ActivityControl.this, "PIR On", Toast.LENGTH_SHORT).show();
+                    turnOnPIRComment();
+                }else {
+                    Toast.makeText(ActivityControl.this, "PIR Off", Toast.LENGTH_SHORT).show();
+                    turnOffPIRComment();
+                }
+            }
+        });
+    }
+
+    private void turnOffPIRComment() {
+        showButtonsVisibility();
+        if (bluetoothSocket != null){
+            try {
+                bluetoothSocket.getOutputStream().write("PIROFF".toString().getBytes());
+                Toast.makeText(this, "Comment sent", Toast.LENGTH_SHORT).show();
+            } catch (IOException e){
+                Toast.makeText(this, "Sending error", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void hideButtonsVisibility() {
+        instructionText.setVisibility(View.VISIBLE);
+        turnOffButton.setVisibility(View.GONE);
+        turnOnButton.setVisibility(View.GONE);
+        turnOnButton2.setVisibility(View.GONE);
+        turnOffButton2.setVisibility(View.GONE);
+    }
+
+    private void showButtonsVisibility() {
+        instructionText.setVisibility(View.GONE);
+        turnOffButton.setVisibility(View.VISIBLE);
+        turnOnButton.setVisibility(View.VISIBLE);
+        turnOnButton2.setVisibility(View.VISIBLE);
+        turnOffButton2.setVisibility(View.VISIBLE);
+
+    }
+
+    private void turnOnPIRComment() {
+        hideButtonsVisibility();
+        if (bluetoothSocket != null){
+            try {
+                bluetoothSocket.getOutputStream().write("PIRON".toString().getBytes());
+                Toast.makeText(this, "Comment sent", Toast.LENGTH_SHORT).show();
+            } catch (IOException e){
+                Toast.makeText(this, "Sending error", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void disconnect(){

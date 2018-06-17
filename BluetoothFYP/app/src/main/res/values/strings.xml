@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Bluetooth FYP</string>
+    <string name="instruction_text">Initialize with PIR Sensor mode only. Switch Off PIR Sensor for manual control.</string>
 </resources>

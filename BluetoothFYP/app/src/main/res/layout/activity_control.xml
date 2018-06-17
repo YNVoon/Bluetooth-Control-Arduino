@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -43,5 +44,29 @@
         android:text="DISCONNECT"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/turnOffButton2"/>
+
+    <Switch
+        android:id="@+id/pirSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PIR Sensor"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/disconnectButton"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:switchPadding="20dp"
+        android:checked="true"/>
+
+    <TextView
+        android:id="@+id/instructionText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/pirSwitch"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:text="@string/instruction_text"
+        android:layout_margin="20dp"
+        android:textSize="16sp"
+        android:lineSpacingExtra="5dp"/>
 
 </android.support.constraint.ConstraintLayout>
