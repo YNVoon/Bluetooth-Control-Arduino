@@ -1,24 +1,28 @@
 package com.example.bluetoothfyp;
 
+import android.app.DialogFragment;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.UUID;
 
-public class ActivityControl extends AppCompatActivity{
+public class ActivityControl extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener{
 
     private String address = null;
     private Button turnOnButton;
@@ -26,6 +30,7 @@ public class ActivityControl extends AppCompatActivity{
     private Button disconnectButton;
     private Button turnOnButton2;
     private Button turnOffButton2;
+    private Button timerButton;
     private ProgressDialog progress;
     private Switch pirSwitch;
     private TextView instructionText;
@@ -49,6 +54,7 @@ public class ActivityControl extends AppCompatActivity{
         turnOnButton2 = findViewById(R.id.turnOnButton2);
         turnOffButton2 = findViewById(R.id.turnOffButton2);
         disconnectButton = findViewById(R.id.disconnectButton);
+        timerButton = findViewById(R.id.timerButton);
         pirSwitch = findViewById(R.id.pirSwitch);
         instructionText = findViewById(R.id.instructionText);
 
@@ -89,6 +95,14 @@ public class ActivityControl extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 turnOff2Comment();
+            }
+        });
+
+        timerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                android.support.v4.app.DialogFragment timePicker = new TimePickerFragment();
+                timePicker.show(getSupportFragmentManager(), "time picker");
             }
         });
 
@@ -174,7 +188,7 @@ public class ActivityControl extends AppCompatActivity{
     private void turnOn2Comment(){
         if (bluetoothSocket != null){
             try {
-                bluetoothSocket.getOutputStream().write("TO2".toString().getBytes());
+                bluetoothSocket.getOutputStream().write("TOO".toString().getBytes());
                 Toast.makeText(this, "Comment sent", Toast.LENGTH_SHORT).show();
             } catch (IOException e){
                 Toast.makeText(this, "Sending error", Toast.LENGTH_SHORT).show();
@@ -196,12 +210,39 @@ public class ActivityControl extends AppCompatActivity{
     private void turnOff2Comment(){
         if (bluetoothSocket != null){
             try {
-                bluetoothSocket.getOutputStream().write("TF2".toString().getBytes());
+                bluetoothSocket.getOutputStream().write("TFF".toString().getBytes());
                 Toast.makeText(this, "Comment sent", Toast.LENGTH_SHORT).show();
             } catch (IOException e){
                 Toast.makeText(this, "Sending error", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        String min = Integer.toString(minute);
+        final String hour = Integer.toString(hourOfDay);
+        if (bluetoothSocket != null){
+            try {
+                bluetoothSocket.getOutputStream().write(min.toString().getBytes());
+
+                Toast.makeText(this, "Comment sent", Toast.LENGTH_SHORT).show();
+            } catch (IOException e){
+                Toast.makeText(this, "Sending error", Toast.LENGTH_SHORT).show();
+            }
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        bluetoothSocket.getOutputStream().write(hour.toString().getBytes());
+                        Toast.makeText(getApplicationContext(), "Comment sent", Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        Toast.makeText(getApplicationContext(), "Sending error", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }, 200);
+        }
+        Toast.makeText(this, "Set time " + hourOfDay + ":" + minute, Toast.LENGTH_SHORT).show();
     }
 
 
