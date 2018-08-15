@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -34,6 +35,8 @@ public class ActivityControl extends AppCompatActivity implements TimePickerDial
     private ProgressDialog progress;
     private Switch pirSwitch;
     private TextView instructionText;
+    private SeekBar slider;
+    private TextView brightness;
 
     private BluetoothAdapter bluetoothAdapter = null;
     private BluetoothSocket bluetoothSocket = null;
@@ -57,6 +60,10 @@ public class ActivityControl extends AppCompatActivity implements TimePickerDial
         timerButton = findViewById(R.id.timerButton);
         pirSwitch = findViewById(R.id.pirSwitch);
         instructionText = findViewById(R.id.instructionText);
+        slider = findViewById(R.id.slider);
+        brightness = findViewById(R.id.brightness);
+
+        slider.setOnSeekBarChangeListener(seekBarChangeListener);
 
         hideButtonsVisibility(); // Initial was controlled by the PIR.
 
@@ -119,6 +126,38 @@ public class ActivityControl extends AppCompatActivity implements TimePickerDial
             }
         });
     }
+
+    // Slider listener
+    SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+            //Toast.makeText(ActivityControl.this, Integer.toString(i), Toast.LENGTH_SHORT).show();
+            brightness.setText("Brightness: " + Integer.toString(i));
+
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            int i = seekBar.getProgress();
+            Toast.makeText(ActivityControl.this, Integer.toString(i), Toast.LENGTH_SHORT).show();
+            if (bluetoothSocket != null){
+                try {
+
+                    i = i + 70;
+                    bluetoothSocket.getOutputStream().write(Integer.toString(i).getBytes());
+
+                } catch (IOException e){
+                    Toast.makeText(ActivityControl.this, "Sending error", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        }
+    };
 
     private void turnOffPIRComment() {
         showButtonsVisibility();
@@ -226,7 +265,7 @@ public class ActivityControl extends AppCompatActivity implements TimePickerDial
             try {
                 bluetoothSocket.getOutputStream().write(min.toString().getBytes());
 
-                Toast.makeText(this, "Comment sent", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, min + "sent", Toast.LENGTH_SHORT).show();
             } catch (IOException e){
                 Toast.makeText(this, "Sending error", Toast.LENGTH_SHORT).show();
             }
@@ -240,7 +279,7 @@ public class ActivityControl extends AppCompatActivity implements TimePickerDial
                         Toast.makeText(getApplicationContext(), "Sending error", Toast.LENGTH_SHORT).show();
                     }
                 }
-            }, 200);
+            }, 500);
         }
         Toast.makeText(this, "Set time " + hourOfDay + ":" + minute, Toast.LENGTH_SHORT).show();
     }
